@@ -1,4 +1,4 @@
-ARG PYTHON_VERSION="3.7.11-slim"
+ARG PYTHON_VERSION="3.9-slim"
 ARG ASDF_VERSION="v0.14.0"
 ARG SCARB_VERSION="2.6.4"
 ARG STARKNET_FOUNDRY_VERSION="0.23.0"
@@ -24,17 +24,15 @@ RUN npm install -g yarn
 # Set up asdf for version management
 RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
 # Add asdf to .bashrc
-RUN echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.zshrc \
-    && echo -e '\n. $HOME/.asdf/completions/asdf.zsh' >> ~/.zshrc
+RUN echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.zshrc 
+#\
+#&& echo -e '\n. $HOME/.asdf/completions/asdf.zsh' >> ~/.zshrc
 
-
-RUN echo 'source ~/.zshrc'
-
+ENV PATH="$HOME/.asdf/bin:$HOME/.asdf/shims:$PATH"
 
 #Starknet tools
-RUN zsh -c 'asdf plugin add scarb'
-#RUN asdf install scarb 2.6.4 
-#&& asdf plugin add starknet-foundry \
-#&& asdf install starknet-foundry 0.23.0
+# Ajouter scarb et starknet-foundry via asdf
+RUN /bin/zsh -c "source ~/.asdf/asdf.sh && asdf plugin add scarb && asdf install scarb 2.6.4 \
+    && asdf plugin add starknet-foundry && asdf install starknet-foundry 0.23.0"
 
 
