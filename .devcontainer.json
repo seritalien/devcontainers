@@ -1,6 +1,6 @@
 {
     "name": "Ceri General Dev Container",
-    "image": "seritalien/gnl_devcontainer:latest", // Remplacez par le nom de votre image
+    "image": "seritalien/devcontainer.alpine:latest", // Remplacez par le nom de votre image
     "forwardPorts": [3000], // Les ports que vous souhaitez transmettre
     "postCreateCommand": "echo 'hi Ceri!'", // Commande à exécuter après la création du conteneur
     "runArgs": [ // Arguments à passer à Docker
