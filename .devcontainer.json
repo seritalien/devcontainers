@@ -2,7 +2,7 @@
     "name": "Ceri General Dev Container",
     "image": "seritalien/devcontainer.alpine:latest", // Remplacez par le nom de votre image
     "forwardPorts": [3000], // Les ports que vous souhaitez transmettre
-    "postCreateCommand": "echo 'hi Ceri!'", // Commande à exécuter après la création du conteneur
+    "postCreateCommand": "echo 'hi devuser!'", // Commande à exécuter après la création du conteneur
     "runArgs": [ // Arguments à passer à Docker
         "--network=host", // Utilisez le réseau hôte de Docker
         "-v", "${localWorkspaceFolder}/:/workspace" // Montez votre dossier de travail local dans /workspace dans le conteneur
