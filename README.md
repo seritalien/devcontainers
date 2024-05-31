@@ -1,7 +1,11 @@
 # devcontainers
 
 # image
-seritalien/gnl_devcontainer:lastest
-ghcr.io/seritalien/gnl_devcontainer:latest
+seritalien/devcontainer.alpine:0.3
+ghcr.io/seritalien/devcontainer.alpine:0.3
 
 # vscode devcontainer
+
+
+seritalien/devcontainer.alpine:0.3 
+-ajout des droits sudo a devuser

@@ -3,20 +3,23 @@ FROM alpine:latest
 
 # Installe les dépendances nécessaires
 RUN apk update && apk upgrade
-RUN apk add --no-cache nodejs npm yarn git curl zsh python3 py3-pip
+RUN apk add --no-cache nodejs npm yarn git curl zsh python3 py3-pip shadow sudo
 
 # Installer pandas, numpy et matplotlib
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 # Installer pandas, numpy et matplotlib
-RUN pip install pandas numpy matplotlib
+RUN pip install pandas numpy matplotlib requests
 
 # Set zsh as the default shell
 SHELL ["/bin/zsh", "-c"]
 ENV SHELL /bin/zsh
 
-# For security reason, it's best to create a user to avoid using root by default
-RUN adduser -D devuser
+# For security reason, it's best to create a user to avoid using root by default, but giving him sudo right
+RUN addgroup -g 1000 devuser && \
+    adduser -D -u 1000 -G devuser devuser && \
+    echo "devuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 USER devuser
 
 ENV HOME /home/devuser
