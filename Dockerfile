@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     libnotify4 \
     libasound2-data \
+    dbus-x11 \
     && rm -rf /var/lib/apt/lists/*
 
 # Installer Brave Browser
@@ -53,6 +54,7 @@ RUN chsh -s $(which zsh)
 # Configuration pour l'affichage graphique
 ENV DISPLAY=:0
 ENV QT_X11_NO_MITSHM=1
+ENV XDG_RUNTIME_DIR=/tmp/runtime-user
 
 # Configuration utilisateur (optionnel)
 ARG USERNAME=user
@@ -66,5 +68,11 @@ RUN if ! getent group $USER_GID; then groupadd --gid $USER_GID $USERNAME; fi && 
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
+# Créer le répertoire runtime
+RUN mkdir -p /tmp/runtime-user && chmod 700 /tmp/runtime-user
+
 # Installer des dépendances supplémentaires pour l'utilisateur
 RUN sudo apt-get install -y python3-venv
+
+# Lancer dbus au démarrage
+CMD ["dbus-run-session", "--", "bash"]

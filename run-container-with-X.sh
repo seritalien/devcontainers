@@ -1,0 +1,1 @@
+docker run -it --rm --name wsl-buro-container -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --shm-size=2g wsl-buro-image
