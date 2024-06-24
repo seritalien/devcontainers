@@ -1,37 +1,70 @@
-# Utilise l'image Alpine
-FROM alpine:latest
+# Utiliser Ubuntu 24.04 LTS
+FROM ubuntu:24.04
 
-# Installe les dépendances nécessaires
-RUN apk update && apk upgrade
-RUN apk add --no-cache nodejs npm yarn git curl zsh python3 py3-pip
+# Mettre à jour et installer les dépendances de base
+RUN apt-get update && apt-get install -y \
+    sudo \
+    apt-utils \
+    curl \
+    wget \
+    git \
+    openssh-client \
+    python3 \
+    python3-pip \
+    zsh \
+    fonts-powerline \
+    software-properties-common \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxi6 \
+    libxtst6 \
+    libnss3 \
+    libxrandr2 \
+    libatk1.0-0 \
+    libgtk-3-0 \
+    libdrm2 \
+    libgbm1 \
+    libxss1 \
+    libxshmfence1 \
+    libglu1-mesa \
+    xdg-utils \
+    libnotify4 \
+    libasound2-data \
+    && rm -rf /var/lib/apt/lists/*
 
-# Installer pandas, numpy et matplotlib
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-# Installer pandas, numpy et matplotlib
-RUN pip install pandas numpy matplotlib
+# Installer Brave Browser
+RUN curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main" | tee /etc/apt/sources.list.d/brave-browser-release.list && \
+    apt-get update && apt-get install -y brave-browser
 
-# Set zsh as the default shell
-SHELL ["/bin/zsh", "-c"]
-ENV SHELL /bin/zsh
+# Télécharger et installer Ferdium
+RUN wget https://github.com/ferdium/ferdium-app/releases/download/v6.7.4/Ferdium-linux-6.7.4-amd64.deb && \
+    apt-get update && apt-get install -y ./Ferdium-linux-6.7.4-amd64.deb && \
+    rm Ferdium-linux-6.7.4-amd64.deb
 
-# For security reason, it's best to create a user to avoid using root by default
-RUN adduser -D devuser
-USER devuser
+# Installer Oh-My-Zsh
+RUN sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" --unattended
 
-ENV HOME /home/devuser
-ENV PATH $PATH:$HOME/.local/bin
+# Définir Zsh comme shell par défaut
+RUN chsh -s $(which zsh)
 
-# Install oh-my-zsh
-RUN ash -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# Configuration pour l'affichage graphique
+ENV DISPLAY=:0
+ENV QT_X11_NO_MITSHM=1
 
-# Install Scarb
-RUN ash -c "$(curl -fsSL https://docs.swmansion.com/scarb/install.sh)" -s -- -v 2.6.4
+# Configuration utilisateur (optionnel)
+ARG USERNAME=user
+ARG USER_UID=1001
+ARG USER_GID=1001
 
-# Install Starknet Foundry
-RUN ash -c "$(curl -fsSL https://raw.githubusercontent.com/foundry-rs/starknet-foundry/master/scripts/install.sh)" -s
-RUN snfoundryup -v 0.23.0
+RUN if ! getent group $USER_GID; then groupadd --gid $USER_GID $USERNAME; fi && \
+    if ! id -u $USER_UID > /dev/null 2>&1; then useradd --uid $USER_UID --gid $USER_GID -m $USERNAME; fi && \
+    echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Définit le répertoire de travail
-WORKDIR /app
+USER $USERNAME
+WORKDIR /home/$USERNAME
 
+# Installer des dépendances supplémentaires pour l'utilisateur
+RUN sudo apt-get install -y python3-venv
