@@ -1,0 +1,1 @@
+docker run -it --name wsl-alpine-container wsl-alpine-image

@@ -1,12 +1,11 @@
 {
     "name": "Ceri General Dev Container",
-    "image": "seritalien/devcontainer.alpine:0.4", 
+    "image": "seritalien/devcontainer.alpine:0.5", 
     "forwardPorts": [3000], 
-    "postCreateCommand": "echo 'hi devuser!'", 
+    "postCreateCommand": "sudo /usr/sbin/sshd", 
     "runArgs": [ 
         "--privileged",
-        "-v", "/var/run/docker.sock:/var/run/docker.sock",
-        "-v", "${localWorkspaceFolder}:/workspace"
+        "-v", "/var/run/docker.sock:/var/run/docker.sock"
     ],
     "customizations": {
         "vscode": {
@@ -38,5 +37,5 @@
         }
     },
     "remoteUser": "root",
-    "workspaceFolder": "/workspace"
+    "workspaceFolder": "/app"
 }
