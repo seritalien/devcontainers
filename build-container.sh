@@ -1,1 +1,1 @@
-docker build -t wsl-alpine-image .
+docker build -t devcontainer.alpine:0.5 .
