@@ -3,9 +3,7 @@ FROM alpine:latest
 
 # Installe les dépendances nécessaires avec root
 RUN apk update && apk upgrade && \
-    apk add --no-cache nodejs npm yarn git curl zsh python3 py3-pip shadow sudo openrc openssh docker-cli docker-compose && \
-    python3 -m venv /opt/venv && \
-    /opt/venv/bin/pip install pandas numpy matplotlib requests && \
+    apk add --no-cache nodejs npm yarn git curl zsh python3 py3-pip shadow sudo openrc openssh docker-cli docker-compose py3-pandas py3-numpy py3-matplotlib py3-requests py3-urllib3 py3-openpyxl py3-scipy py3-ipykernel py3-seaborn icu-data-full && \
     addgroup -g 1000 devuser && \
     adduser -D -u 1000 -G devuser devuser && \
     echo "devuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
@@ -16,8 +14,7 @@ RUN apk update && apk upgrade && \
     addgroup -S docker && addgroup devuser docker
 
 # Définir les variables d'environnement
-ENV PATH="/opt/venv/bin:$PATH" \
-    HOME="/home/devuser" \
+ENV HOME="/home/devuser" \
     SHELL="/bin/zsh"
 
 USER devuser
